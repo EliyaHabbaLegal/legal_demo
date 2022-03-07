@@ -23,3 +23,6 @@ class Answer:
         self.end_of_context_from_the_answer = self.get_string_from_token_indexes(self._answer_end_index + 1, -1)
         if self.answer_itself:
             self.significant_answer = True
+
+    def get_full_answer(self):
+        return self.beginning_of_context_until_answer  + ' ' + self.answer_itself + ' ' +  self.end_of_context_from_the_answer
