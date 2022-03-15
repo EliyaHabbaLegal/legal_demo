@@ -9,7 +9,7 @@ from download_st_helper import download_button
 from eval_utils import MODELS, models_names_to_models_path, ALEPHBERT_PARASHOOT, MBERT_PARASHOOT, \
     LEGAL_QA_EXAMPLES_PATH, predict, save_results_to_docx, get_list_of_epochs_of_model, read_file_to_pars
 from model_ckpt import ModelCkpt
-from utils import load_jsonl_data, get_data_points_from_paragraphs
+from utils import load_jsonl_data, get_data_points_from_paragraphs, small_get_data_points_from_paragraphs
 
 DEFAULT_TH = 35
 TEXT = 'Text'
@@ -66,7 +66,6 @@ def predict_on_many_segments(question, contexts, model_ckpt, top_k, th):
     answers_after_th = {key: [] for key in range(top_k)}
 
     th_to_prob = th / 100
-    print("####")
     for i, context in enumerate(contexts):
         model_apply_state = st.text(f"Predicting answer on segment {i}/{len(contexts)}")
         answers = predict_on_one_segment(question, context, model_ckpt, top_k, progress=False)
@@ -102,11 +101,15 @@ def save_to_docx(question, answers, confidences, model_name):
     st.markdown(download_title_for_displaying, unsafe_allow_html=True)
 
 
-def display_significant_answer(answer):
+def display_significant_answer(answer, display_confidence=False):
     prefix, real_answer, suffix = answer.beginning_of_context_until_answer, answer.answer_itself, answer.end_of_context_from_the_answer
     st.markdown(f"<p style='text-align: input {{unicode-bidi:bidi-override; direction: RTL;}}"
                 f" direction: RTL; color: grey; '>{prefix} <span style=font-weight:bold;>{real_answer} </span>{suffix}</p>",
                 unsafe_allow_html=True)
+    if display_confidence:
+        st.markdown(f"<h6 style='text-align: center; color:red;'>sum of confidence: {'%.2f' % (answer.answer_start_confidence +  answer.answer_end_confidence)}</h6>",
+        unsafe_allow_html=True)
+
 
 
 def display_answer(answer, model_ckpt, display_no_find_answer=True):
@@ -127,7 +130,7 @@ def display_k_answers_on_file_continuously(question, model_ans, model_ckpt, answ
     st.markdown(f"**_model {model_ckpt.name} - {model_ckpt.epoch}_**")
     for answer in model_ans[answer_num]:
         if answer.significant_answer:
-            display_significant_answer(answer)
+            display_significant_answer(answer, display_confidence=True)
             significant_answers.append(answer)
             confs.append(('%.2f' % answer.answer_start_confidence, '%.2f' % answer.answer_end_confidence))
     save_to_docx(question, significant_answers, confs, f"{model_ckpt.name}_{model_ckpt.epoch}")

@@ -58,15 +58,29 @@ def split_text_by_tokenizer(text: str, tokenizer):
     return texts
 
 
-def get_data_points_from_paragraphs(paragraphs, tokenizer):
+def small_get_data_points_from_paragraphs(paragraphs, tokenizer):
     """
-    this function generates data points from given paragraphs.
+    This function generates data points from given paragraphs.
 
-    :param paragraphs: a given list of objects with 'text' field containing string representations of the paragraphs
-    :param text_dict: a dictionary with the text information
-    :param tokenizer:  a given tokenizer
+    :param paragraphs: A given list of objects with 'text' field containing string representations of the paragraphs
+    :param text_dict: A dictionary with the text information
+    :param tokenizer:  A given tokenizer
     :return:
     """
+    text = ''
+    texts_results = []
+    for p in paragraphs:
+        if p.text.endswith(':'):  # If text ends with ':' -> the text continues in the next p
+            text = p.text + ' '
+        else:
+            text_stripped = (text + p.text).replace('\n', ' ').strip()
+            texts = split_text_by_tokenizer(text_stripped, tokenizer)
+            texts_results.extend(texts)
+            text = ''
+    return texts_results
+
+
+def get_data_points_from_paragraphs(paragraphs, tokenizer):
     text = ''
     i = 0
     texts_results = []
