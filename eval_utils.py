@@ -7,17 +7,17 @@ from torch import nn
 from answer import Answer
 
 ALEPHBERT_PARASHOOT = "alephbert-fine-tuning-ParaShoot"
-LEGALHBERT_PARASHOOT = "legal-alephbert-fine-tuning-ParaShoot"
+LEGALHBERT_PARASHOOT = "legalephbert-fine-tuning-ParaShoot"
 ALEPHBERT_SQUAD = "alephbert-fine-tuning-squad"
-LEGALHBERT_SQUAD = "legal-alephbert-fine-squad"
+LEGALHBERT_SQUAD = "Legalephbert-fine-squad"
 MBERT_PARASHOOT = "mbert-fine-tuning-ParaShoot"
 MODELS = [ALEPHBERT_PARASHOOT, LEGALHBERT_PARASHOOT, MBERT_PARASHOOT, ALEPHBERT_SQUAD, LEGALHBERT_SQUAD]
 models_names_to_models_path = {ALEPHBERT_PARASHOOT: os.path.join('models', 'finetuining_aleph_onparashoot', "epoch_4"),
                                LEGALHBERT_PARASHOOT: os.path.join('models', 'finetuining_legalaleph_onparashoot',
                                                                   "epoch_5"),
                                MBERT_PARASHOOT: os.path.join('models', 'finetuining_mbert_onparashoot', "epoch_10"),
-                               LEGALHBERT_SQUAD: os.path.join('models', 'finetuining_legalaleph_squad', "epoch_10"),
-                               ALEPHBERT_SQUAD: os.path.join('models', 'finetuining_aleph_squad', "epoch_10"),
+                               LEGALHBERT_SQUAD: os.path.join('models', 'finetuining_legalaleph_squad', "epoch_8"),
+                               ALEPHBERT_SQUAD: os.path.join('models', 'finetuining_aleph_squad', "epoch_8"),
                                }
 
 LEGAL_QA_EXAMPLES_PATH = os.path.join('data', 'legal_qa.jsonl')
